@@ -48,3 +48,21 @@ resource "aws_security_group" "ecs_instance_sg" {
     Name = "${var.project}-ecs-instance-sg"
   }
 }
+resource "aws_security_group" "ecs_service_sg" {
+  name        = "${var.project}-ecs-service-sg"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    security_groups = [aws_security_group.alb_sg.id] # ALB -> ECS
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
