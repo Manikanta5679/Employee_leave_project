@@ -1,4 +1,4 @@
-# ECS Task Execution Role (allows ECS to pull from ECR, etc.)
+# ECS Task Execution Role (allows ECS to pull from ECR, write logs to CloudWatch, etc.)
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.project}-ecs-task-execution-role"
 
