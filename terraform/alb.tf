@@ -14,7 +14,7 @@ resource "aws_lb" "main" {
 }
 resource "aws_lb_target_group" "backend" {
   name        = "${var.project}-tg"
-  port        = 80
+  port        = 8000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
