@@ -18,7 +18,7 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_launch_template" "ecs_launch_template" {
   name_prefix   = "${var.project}-ecs-launch-"
   image_id      = data.aws_ami.ecs_ami.id
-  instance_type = "t3.micro"  # or t2.micro (free tier)
+  instance_type = "t3.small"  # or t2.micro (free tier)
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_instance_profile.name
@@ -47,7 +47,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   name                      = "${var.project}-ecs-asg"
   max_size                  = 2
   min_size                  = 1
-  desired_capacity          = 1
+  desired_capacity          = 2
   vpc_zone_identifier       = aws_subnet.private[*].id
   launch_template {
     id      = aws_launch_template.ecs_launch_template.id
