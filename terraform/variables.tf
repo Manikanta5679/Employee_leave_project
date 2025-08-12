@@ -1,23 +1,51 @@
 variable "project" {
-  default = "employee-leave"
+  type = string
 }
 
 variable "region" {
-  default = "us-east-1"
+  type = string
 }
 
 variable "vpc_cidr" {
-  default = "10.0.0.0/16"
+  type = string
 }
 
 variable "public_subnet_cidrs" {
-  default = ["10.0.1.0/24", "10.0.2.0/24"]
+  type = list(string)
 }
 
 variable "private_subnet_cidrs" {
-  default = ["10.0.101.0/24", "10.0.102.0/24"]
+  type = list(string)
 }
 
 variable "azs" {
-  default = ["us-east-1a", "us-east-1b"]
+  type = list(string)
+}
+
+variable "ami_id" {
+  type = string
+}
+
+variable "instance_type" {
+  type = string
+}
+
+variable "associate_public_ip" {
+  type = bool
+}
+
+variable "key_name" {
+  type = string
+}
+
+variable "aws_account_id" {
+  type = string
+}
+
+variable "instance_port" {
+  type = number
+}
+variable "public_key_path" {
+  description = "Path to your public SSH key"
+  type        = string
 }

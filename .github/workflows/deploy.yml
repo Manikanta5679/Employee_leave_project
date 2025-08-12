@@ -1,4 +1,4 @@
-name: CI/CD Backend
+name: CI/CD Backend (EC2)
 
 on:
   push:
@@ -42,9 +42,15 @@ jobs:
           ignore-unfixed: true
         continue-on-error: true
 
-      - name: Update ECS Service
-        run: |
-          aws ecs update-service \
-            --cluster ${{ secrets.ECS_CLUSTER }} \
-            --service ${{ secrets.ECS_SERVICE }} \
-            --force-new-deployment
+      - name: SSH into EC2 and Deploy
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            docker pull ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
+            docker stop backend || true
+            docker rm backend || true
+            docker run -d --name backend -p 8000:8000 --restart unless-stopped ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:latest
