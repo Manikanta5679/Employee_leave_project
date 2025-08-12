@@ -19,7 +19,7 @@ resource "aws_instance" "app_instance" {
   user_data = <<-EOF
     #!/bin/bash
     apt-get update -y
-    apt-get install -y docker.io unzip
+    apt-get install -y docker.io unzip snapd
 
     systemctl start docker
     systemctl enable docker
@@ -30,6 +30,11 @@ resource "aws_instance" "app_instance" {
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
     ./aws/install
+
+    # Install and start Amazon SSM Agent via snap
+    snap install amazon-ssm-agent --classic
+    systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
+    systemctl enable snap.amazon-ssm-agent.amazon-ssm-agent.service
 
     # Login to ECR and pull image
     aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${var.ecr_repo_url}
